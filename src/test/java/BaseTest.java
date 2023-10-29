@@ -1,6 +1,8 @@
 import com.microsoft.playwright.*;
 import org.testng.annotations.*;
 
+import static utils.ProjectConstant.BASE_URL;
+
 public class BaseTest {
     private Playwright playwright;
     private Browser browser;
@@ -27,7 +29,7 @@ public class BaseTest {
         context = browser.newContext();
         page = context.newPage();
 
-        page.navigate("http://localhost:3000/");
+        page.navigate(BASE_URL);
     }
 
     @AfterMethod

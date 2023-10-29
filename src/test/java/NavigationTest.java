@@ -1,34 +1,37 @@
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import utils.TestData;
+
+import static utils.ProjectConstant.BASE_TITLE;
+import static utils.ProjectConstant.BASE_URL;
 
 public class NavigationTest extends BaseTest {
 
     @Test
     public void testHomePage_URLAndTitle_AsExpected() {
-        String expectedHomeURL = "http://localhost:3000/";
-        String expectedHomeTitle = "AJ Shop | Timeless Clothing For Him and For Her";
-
-        Assert.assertEquals(getPage().url(), expectedHomeURL);
-        Assert.assertEquals(getPage().title(), expectedHomeTitle);
+        Assert.assertEquals(getPage().url(), BASE_URL);
+        Assert.assertEquals(getPage().title(), BASE_TITLE);
     }
 
-    @Test(dependsOnMethods = "testHomePage_URLAndTitle_AsExpected")
-    public void testMenuForHim_NavigatesTo_ForHimPage() {
-        String expectedForHimUrl = "http://localhost:3000/forHim";
-        String expectedForHimTitle = "AJ Shop | For Him";
+    @Test(
+            dataProvider = "NavigationBarTestData",
+            dataProviderClass = TestData.class,
+            dependsOnMethods = "testHomePage_URLAndTitle_AsExpected"
+    )
+    public void testNavBarMenu_NavigatesTo_CorrespondedPage(String cssSelector, String expectedUrl, String expectedTitle) {
+        String logoCss = "nav a[href='/']";
 
-        String homeURL = getPage().url();
-        String homeTitle = getPage().title();
+        getPage().locator(cssSelector).click();
 
-        getPage().locator("nav a[href='/forHim']").click();
+        String actualUrl = getPage().url();
+        String actualTitle = getPage().title();
 
-        String forHimUrl = getPage().url();
-        String forHimTitle = getPage().title();
+        if(!cssSelector.equals(logoCss)) {
+            Assert.assertNotEquals(BASE_URL, actualUrl);
+            Assert.assertNotEquals(BASE_TITLE, actualTitle);
+        }
 
-        Assert.assertNotEquals(homeURL, forHimUrl);
-        Assert.assertNotEquals(homeTitle, forHimTitle);
-
-        Assert.assertEquals(forHimUrl, expectedForHimUrl);
-        Assert.assertEquals(forHimTitle, expectedForHimTitle);
+        Assert.assertEquals(actualUrl, expectedUrl);
+        Assert.assertEquals(actualTitle, expectedTitle);
     }
 }
