@@ -3,7 +3,7 @@ import org.testng.annotations.*;
 
 import static utils.ProjectConstant.BASE_URL;
 
-public class BaseTest {
+public abstract class BaseTest {
     private Playwright playwright;
     private Browser browser;
     private BrowserContext context;
@@ -42,7 +42,7 @@ public class BaseTest {
         playwright.close();
     }
 
-    public Page getPage() {
+    protected Page getPage() {
         return page;
     }
 }
